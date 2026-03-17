@@ -19,9 +19,6 @@ jobs:
         with:
           sdk: stable
 
-      - name: Install dependencies
-        run: dart pub get
-
       - name: Build executable
         run: dart compile exe main.dart -o envrd
 
@@ -36,7 +33,7 @@ jobs:
           prerelease: false
 
       - name: Upload executable to release
-        uses: actions/upload-release-asset@v1
+        uses: ncipollo/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./envrd
