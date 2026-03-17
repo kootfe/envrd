@@ -30,13 +30,11 @@ jobs:
         with:
           tag: v${{ github.run_number }}
           name: Release ${{ github.run_number }}
-          body: Auto release from GitHub Actions
 
       - name: Upload executable to release
-        uses: svenstaro/upload-release-action@v2
+        uses: ncipollo/upload-release-asset@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.release.outputs.tag }}
-          file: ./envrd
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./envrd
           asset_name: envrd
-          overwrite: true
+          asset_content_type: application/octet-stream
