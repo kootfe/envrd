@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # necessary to create releases
 
     steps:
       - name: Checkout repo
@@ -23,19 +25,18 @@ jobs:
         run: dart compile exe main.dart -o envrd
 
       - name: Create Release
-        id: create_release
+        id: release
         uses: ncipollo/release-action@v1
         with:
           tag: v${{ github.run_number }}
           name: Release ${{ github.run_number }}
           body: Auto release from GitHub Actions
-          draft: false
-          prerelease: false
 
       - name: Upload executable to release
-        uses: ncipollo/upload-release-asset@v1
+        uses: svenstaro/upload-release-action@v2
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./envrd
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
+          file: ./envrd
           asset_name: envrd
-          asset_content_type: application/octet-stream
+          overwrite: true
